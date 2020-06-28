@@ -5,7 +5,7 @@ import NewNoteModal from "./NewNoteModal";
 
 import axios from "axios";
 
-import { API_URL } from "../constants";
+import { NOTE_API_URL } from "../constants";
 
 class Home extends Component {
   state = {
@@ -17,7 +17,7 @@ class Home extends Component {
   }
 
   getNotes = () => {
-    axios.get(API_URL).then(res => this.setState({ notes: res.data }));
+    axios.get(NOTE_API_URL).then(res => this.setState({ notes: res.data }));
   };
 
   resetState = () => {

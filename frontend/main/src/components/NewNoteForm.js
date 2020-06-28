@@ -4,7 +4,7 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 
 import axios from "axios"
 
-import { API_URL } from "../constants/";
+import { NOTE_API_URL } from "../constants/";
 
 class NewNoteForm extends React.Component {
 	state = {
@@ -26,7 +26,7 @@ class NewNoteForm extends React.Component {
 
 	createNote = e => {
 		e.preventDefault();
-		axios.post(API_URL, this.state).then(() => {
+		axios.post(NOTE_API_URL, this.state).then(() => {
 			this.props.resetState();
 			this.props.toggle();
 		});
@@ -34,7 +34,7 @@ class NewNoteForm extends React.Component {
 
 	editNote = e => {
 		e.preventDefault();
-		axios.put(API_URL + this.state.pk, this.state).then(() => {
+		axios.put(NOTE_API_URL + this.state.pk, this.state).then(() => {
 			this.props.resetState();
 			this.props.toggle();
 		});

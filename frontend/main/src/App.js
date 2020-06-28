@@ -1,12 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import axios from 'axios';
+import Header from "./components/Header";
+import Home from "./components/Home";
 
 class App extends Component {
 
 	state = {
 		title: '',
 		tags: '',
-		image: null
+		image: null,
+		name: '',
+		text: ''
 	};
 
 	handleChange = (e) => {
@@ -21,7 +25,7 @@ class App extends Component {
 		})
 	};
 
-	handleSubmit = (e) => {
+	handleSubmitPost = (e) => {
 		e.preventDefault();
 		console.log(this.state);
 		let form_data = new FormData();
@@ -40,28 +44,32 @@ class App extends Component {
 			})
 			.catch(err => console.log(err))
 	};
+
+	handleSubmitNote = (e) => {
+		e.preventDefault();
+		console.log(this.state);
+		let form_data = new FormData();
+		form_data.append('name', this.state.name);
+		form_data.append('text', this.state.text);
+		let url = 'http://localhost:8000/api/notes/';
+		axios.post(url, form_data, {
+			headers: {
+				'content-type': 'multipart/form-data'
+			}
+
+		})
+			.then(res => {
+				console.log(res.data);
+			})
+			.catch(err => console.log(err))
+	};
 		
   render() {
     return (
-      <div className="App">
-      	<form onSubmit={this.handleSubmit}>
-      		<p>
-      			<input type="text" placeholder='Title' id='title' value={this.state.title}
-      			onChange={this.handleChange} required/>
-      		</p>
-
-      		<p>
-            	<input type="text" placeholder='Tags' id='tags' value={this.state.tags}
-            	onChange={this.handleChange} required/>
-
-          	</p>
-
-          	<p>
-            	<input type="file" id="image" accept="image/png, image/jpeg" onChange={this.handleImageChange} required/>
-            </p>
-            <input type="submit"/>
-        </form>
-    </div>
+    	<Fragment>
+    	<Header/>
+    	<Home />
+    	</Fragment>
     );
   }
 }

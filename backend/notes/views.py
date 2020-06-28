@@ -3,25 +3,27 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from .models import Note
-from .serializers import *
+from .serializers import NoteSerializer
 
 @api_view(['GET', 'POST'])
-def notes_list(request):
+def note_list(request):
     if request.method == 'GET':
         data = Note.objects.all()
         serializer = NoteSerializer(data, context={'request': request}, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        print(request.data)
         serializer = NoteSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
 
+        print(serializer.errors)    
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT', 'DELETE'])
-def notes_detail(request, pk):
+def note_detail(request, pk):
     try:
         note = Note.objects.get(pk=pk)
     except Note.DoesNotExist:

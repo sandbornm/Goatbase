@@ -1,24 +1,39 @@
-from django.shortcuts import render
-from .serializers import PostSerializer
-from .models import Post
-from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework import status
+from .models import Post
+from .serializer import PostSerializer
 
-class PostView(APIView):
-	parser_classes = (MultiPartParser, FormParser)
+@api_view(['GET', 'POST'])
+def post_list(request):
+    if request.method == 'GET':
+        data = Post.objects.all()
+        serializer = PostSerializer(data, context={'request': request}, many=True)
+        return Response(serializer.data)
 
-	def get(self, request, *args, **kwargs):
-		posts = Post.objects.all()
-		serializer = PostSerializer(posts, many=True)
-		return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
 
-	def post(self, request, *args, **kwargs):
-		posts_serializer = PostSerializer(data=request.data)
-		if posts_serializer.is_valid():
-			posts_serializer.save()
-			return Response(posts_serializer.data, status=status.HTTP_201_CREATED)
-		else:
-			print('error', posts_serializer.errors)
-			return Response(posts_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT', 'DELETE'])
+def post_detail(request, pk):
+    try:
+        note = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = PostSerializer(note, data=request.data, context={'request':request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        note.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

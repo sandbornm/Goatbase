@@ -28,7 +28,7 @@ class NewNoteModal extends Component {
           onClick={this.toggle}
           style={{ minWidth: "200px" }}
         >
-          Create New
+          Add New
         </Button>
       );
     }
