@@ -44,6 +44,25 @@ class NewNoteForm extends React.Component {
 		return value === "" ? "" : value;
 	};
 
+	handleSubmitNote = (e) => {
+		e.preventDefault();
+		console.log(this.state);
+		let form_data = new FormData();
+		form_data.append('name', this.state.name);
+		form_data.append('text', this.state.text);
+		let url = 'http://localhost:8000/api/notes/';
+		axios.post(url, form_data, {
+			headers: {
+				'content-type': 'multipart/form-data'
+			}
+
+		})
+			.then(res => {
+				console.log(res.data);
+			})
+			.catch(err => console.log(err))
+	};
+
 	render() {
 		return (
 			<Form onSubmit={this.props.note ? this.editNote : this.createNote}>

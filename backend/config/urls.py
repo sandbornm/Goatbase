@@ -17,9 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from notes.views import note_list, note_detail
+from posts.views import post_list, post_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/notes/', note_list),
     path('api/notes/<int:pk>/', note_detail),
+    path('api/posts/', post_list),
+    path('api/posts/<int:pk>/', post_detail),
 ]

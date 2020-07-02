@@ -1,8 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+
 from .models import Post
-from .serializer import PostSerializer
+from .serializers import PostSerializer
 
 @api_view(['GET', 'POST'])
 def post_list(request):
